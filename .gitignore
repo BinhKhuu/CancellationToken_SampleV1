@@ -32,3 +32,12 @@ node_modules/
 # ===============================
 Thumbs.db
 Desktop.ini
+
+# ===============================
+# IDE & Editors
+# ===============================
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
