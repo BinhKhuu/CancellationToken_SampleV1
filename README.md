@@ -28,3 +28,6 @@ CleanArchitectureSolution/
     ├── package.json
     └── angular.json
 ```
+
+
+# Act Testing
