@@ -1,0 +1,34 @@
+# ===============================
+# .NET Core / ASP.NET Core
+# ===============================
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+*.user
+*.suo
+*.vspscc
+*.vssscc
+*.sln.cache
+
+# ===============================
+# Angular Frontend
+# ===============================
+dist/
+node_modules/
+.angular/
+
+# ===============================
+# IDE & Editors
+# ===============================
+.vs/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# ===============================
+# Operating System
+# ===============================
+Thumbs.db
+Desktop.ini
