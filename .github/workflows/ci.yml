@@ -29,32 +29,32 @@ jobs:
         working-directory: CancellationToken.Client/CancellationToken
         run: ng build
 
-#      - name: Upload Build Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: angular-app
-#          path: CancellationToken.Client/CancellationToken/dist/
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-app
+          path: CancellationToken.Client/CancellationToken/dist/
 
-#  test:
-#    runs-on: ubuntu-latest
-#    needs: build
-#    
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Setup Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '18'
-#          cache: 'npm'
-#          cache-dependency-path: CancellationToken.Client/CancellationToken/package-lock.json
-#
-#      - name: Install Frontend Dependencies
-#        working-directory: CancellationToken.Client/CancellationToken
-#        run: npm ci
-#
-#      - name: Run Angular Tests
-#        working-directory: CancellationToken.Client/CancellationToken
-#        run: ng test --watch=false --code-coverage=true
-#    
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: CancellationToken.Client/CancellationToken/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: CancellationToken.Client/CancellationToken
+        run: npm ci
+
+      - name: Run Angular Tests
+        working-directory: CancellationToken.Client/CancellationToken
+        run: ng test --watch=false --code-coverage=true
+
     
