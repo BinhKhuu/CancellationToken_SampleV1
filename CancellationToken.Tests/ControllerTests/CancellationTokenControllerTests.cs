@@ -1,10 +1,10 @@
 namespace CancellationToken.Tests.ControllerTests;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-public class CancellationTokenControllerTests: IClassFixture<WebApplicationFactory<CancellationToken.Web.Program>>
+public class CancellationTokenControllerTests: IClassFixture<TestWebApplicationFactory>
 {
     private readonly HttpClient _client;
-    public CancellationTokenControllerTests(WebApplicationFactory<Web.Program> factory)
+    public CancellationTokenControllerTests(TestWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
