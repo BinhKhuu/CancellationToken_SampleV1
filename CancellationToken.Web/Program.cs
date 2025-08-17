@@ -15,11 +15,19 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
+        
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
-
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowDebug",
+                builder => builder.WithOrigins("https://localhost:4200")
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+        });
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -29,12 +37,10 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.UseAuthentication();  // 🔐 Must be before UseAuthorization
         app.UseAuthorization();
-
-
         app.MapControllers();
-
+        app.UseCors("AllowDebug");
         app.Run();
     }
 }

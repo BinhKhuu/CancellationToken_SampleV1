@@ -6,7 +6,70 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.304'
+          
+      - name: 🕵️ List files in workspace
+        run: ls -R
+
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: 📦 Restore dependencies
+        run: dotnet restore CancellationToken.Web.csproj
+        working-directory: CancellationToken.Web
+        
+      - name: 🛠️ Build solution
+        run: dotnet build CancellationToken.Web.csproj --no-restore --configuration Release
+        working-directory: CancellationToken.Web
+  
+  build-test:
+    needs: build-api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.304'
+
+      - name: 🕵️ List files in workspace
+        run: ls -R
+
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: 📦 TEST Restore dependencies
+        run: dotnet restore CancellationToken.Tests.csproj
+        working-directory: CancellationToken.Tests
+
+      - name: 🛠️ TEST Build solution
+        run: dotnet build CancellationToken.Tests.csproj --no-restore --configuration Release
+        working-directory: CancellationToken.Tests
+        
+      - name: 🧪 Run tests
+        run: dotnet test CancellationToken.Tests.csproj --no-build --configuration Release --logger "console;verbosity=normal"
+        working-directory: CancellationToken.Tests
+        
+  build-client:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +98,12 @@ jobs:
         with: 
           name: WebApp
           path: CancellationToken.Client/CancellationToken/dist/
+
+
+
+
+#      - name: 🧪 Run tests
+#        run: dotnet test ./TEST_ElasticSearch/TEST_ElasticSearch.csproj --no-build --configuration Release --logger "console;verbosity=normal"
 
 #  test:
 #    runs-on: ubuntu-latest
