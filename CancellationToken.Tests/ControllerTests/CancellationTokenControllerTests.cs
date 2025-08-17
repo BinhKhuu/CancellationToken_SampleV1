@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using CancellationToken.Tests.Helpers;
+
 namespace CancellationToken.Tests.ControllerTests;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -7,11 +10,15 @@ public class CancellationTokenControllerTests: IClassFixture<TestWebApplicationF
     public CancellationTokenControllerTests(TestWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
+
     }
 
     [Fact]
     public async Task LongRunning_Timout_ShouldThrowCancelException()
     {
+        var token = MockJwtTokens.GenerateJwtToken([new Claim("email","test@email.com")]);
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
         var request = _client.GetAsync("/api/CancellationToken/LongRunning", cts.Token);
         
@@ -31,9 +38,20 @@ public class CancellationTokenControllerTests: IClassFixture<TestWebApplicationF
     [Fact]
     public async Task LongRunning_InTime_ShouldReturnSucess()
     {
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+        var token = MockJwtTokens.GenerateJwtToken([new Claim("email","test@email.com")]);
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        
+        using var cts = new CancellationTokenSource();
+        
         var request = _client.GetAsync("/api/CancellationToken/LongRunning", cts.Token);
         var response = await request;
         response.EnsureSuccessStatusCode();
+    }
+
+    private string GetToken()
+    {
+        return MockJwtTokens.GenerateJwtToken([
+        ]);
     }
 }
